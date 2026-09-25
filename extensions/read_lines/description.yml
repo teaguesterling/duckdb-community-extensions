@@ -12,10 +12,18 @@ repo:
   # andium (DuckDB v1.4.5 track) intentionally left at its prior commit; ref is a
   # v1.5.4 tree, so v0.4.0 ships on the v1.5.x track only.
   andium: 8075509bc21b936c228879ada22c8a46657109aa
-  ref: c74ad3976cbad35b4202f3f430c94a97bd10b875
+  ref: a908e4b34f29fefc0794058439150740fca1da40
   # ref_next == ref (deliberate): make test_against_latest build+test this release
   # against DuckDB v2.0-cyanoptera instead of skipping the prerelease leg.
-  ref_next: c74ad3976cbad35b4202f3f430c94a97bd10b875
+  #
+  # Both point at a908e4b3 rather than c74ad397. c74ad397 is an ANCESTOR of
+  # this commit and still guards the extension entry point on
+  # DUCKDB_BUILD_LOADABLE_EXTENSION, which v2.0 consumes but never defines -- so it
+  # exports no entry point and wasm/macOS fail to link:
+  #   emcc: error: undefined exported symbol: "_read_lines_duckdb_cpp_init"
+  # This commit carries the fix (teaguesterling/duckdb_read_lines#15) and was
+  # already validated green on the v2.0 leg via duckdb/community-extensions#2763.
+  ref_next: a908e4b34f29fefc0794058439150740fca1da40
 docs:
   hello_world: |
     -- Read all lines from a file
